@@ -87,49 +87,59 @@
 
 \section{History and Constructions}
 
-The Golay code developed by Marcel Golay in 1949 has had significant impact on the advancement of coding theory, the classification of simple finite groups, and communication systems. Golay's 1949 article ``Notes on Digital Coding'' appeared in the June edition of the Proceedings of the IRE [\cite{golay}]. In ``Notes on Digital Coding'' Golay presented a generalization of the Hamming(7,4) code which he had read about in Shannon's 1948 paper. After generalizing the perfect, single error-correcting codes, Golay then justifies the existence of two codes which can correct multiple errors, the perfect binary Golay code $\mathcal{G}_{23}$, and the ternary Golay code. At the bottom of the article Golay supplied generator matrices for his codes, but lacked any explanation of their construction. Golay would provide explanation of his matrices' construction in 1954. Though brief and without significant justification, Berlekamp called the article ``the best single published page'' and Zaremba once told Golay that he had ``said more in half a page than others have said in twenty pages'' [\cite{thompson}]. The remainder of this section will focus on constructions of $\mathcal{G}_{23}$, $\mathcal{G}_{24}$, and some interesting properties they satisfy. With these constructions and their properties in hand, we will then be able to motivate the study of the Golay codes as Steiner systems with known automorphism groups.
+The Golay code developed by Marcel Golay in 1949 has had significant impact on the advancement of coding theory, the classification of simple finite groups, and communication systems. Golay's 1949 article ``Notes on Digital Coding'' appeared in the June edition of the Proceedings of the IRE [\cite{golay}]. In ``Notes on Digital Coding'' Golay presented a generalization of the Hamming(7,4,3) code which he had read about in Shannon's 1948 paper. After generalizing the perfect, single error-correcting codes, Golay then justifies the existence of two codes which can correct multiple errors, the perfect binary Golay $[23,12,11]_2$ code $\mathcal{G}_{23}$, and the ternary Golay $[11,6,5]_3$ code $\mathcal{G}_{11}$. At the bottom of the article Golay supplied generator matrices for his codes, but lacked any explanation of their construction. Golay would provide explanation of his matrices' construction in 1954. Though brief and without significant justification, Berlekamp called the article ``the best single published page'' and Zaremba once told Golay that he had ``said more in half a page than others have said in twenty pages'' [\cite{thompson}]. The remainder of this section will focus on constructions of $\mathcal{G}_{23}$, $\mathcal{G}_{24}$, and some interesting properties they satisfy. With these constructions and their properties in hand, we will then be able to motivate the study of the Golay codes as Steiner systems with known automorphism groups.
 
 \subsection{Important Definitions}
 We first need to equip ourselves with the primitive definitions used when discussing linear codes.
 
-\begin{defn}[linear code and their properties]
-A linear code $\mathcal{C}$ is a subspace of a vector space $V$. We define the following properties:
+\begin{defn}[linear codes and their properties]
+A linear $[n,k,d]_p$ code $\mathcal{C}$ is a subspace of a vector space $V$. We define the following properties:
 \begin{enumerate}
+\item \textit{alphabet}: the number of letters in the alphabet is denoted $p$.
 \item \textit{length}: the number of characters, $n$, in a word in $\mathcal{C}$.
 \item \textit{dimension}: the number of characters, $k$, which uniquely determine a word in $\mathcal{C}$.
-\item \textit{distance}: the number of positions, $d$ in which two words differ.
-\item \textit{weight}: the number of positions in which a word differs from the zero word.
+\item \textit{distance}: the number of positions, $d$, in which two words differ.
+\item \textit{weight}: the distance between a word and the zero word.
 \item \textit{detectable errors}: the number of errors a code can detect is $d-1$.
 \item \textit{correctable errors}: the number of errors a code can correct is $t=\lfloor \frac{d-1}{2} \rfloor$.
 \end{enumerate} 
 \end{defn}
 
-For a linear code, the minimum weight will coincide with the minimum distance. This is trivial to see since $\mathcal{C}$ is a vector subspace, it is closed under vector addition. Thus if any two vectors $\bf{v}$,$\bf{w}$ have the minimum distance between them, then $\bf{v}-\bf{v}=\bf{0}$ and $\bf{w}-\bf{v}$ are separated by the same distance.
+For a linear code, the minimum weight will coincide with the minimum distance. This is trivial to see since $\mathcal{C}$ is a vector subspace, it is closed under vector addition. Thus if any two vectors $\bf{v}$, $\bf{w}$ have the minimum distance between them, then $\bf{v}-\bf{v}=\bf{0}$ and $\bf{w}-\bf{v}$ are separated by the same distance.
 
 \begin{defn}[perfect]
 A code $\mathcal{C}$ with minimum weight $d$ in a vector space $V$ is \textit{perfect} if all the vectors in $V$ are contained in spheres of radius $r=\lfloor \frac{d-1}{2} \rfloor$ centered around the codewords. We note that $r$ corresponds to the definition of the code's correctable number of errors.
 \end{defn}
 
-The Hamming (7,4,3) codes present such a partition of $(\mathbb{Z}/2)^7$ as we can show. Consider an arbitrary $c \in \mathcal{C}$. Then the number of vectors in a sphere of radius 1 centered at $c$ is
+The Hamming(7,4,3) codes present such a partition of $(\mathbb{Z}/2)^7$ as we can show. Consider an arbitrary $c \in \mathcal{C}$. Then the number of vectors in a sphere of radius 1 centered at $c$ is
 $$
-V_1(c) = \#{x | d(x,c)\leq 1} = {7 \choose 1} + {7 \choose 0} = 8 = 2^3
+V_1(c) = \#\{x | d(x,c)\leq 1 \} = {7 \choose 1} + {7 \choose 0} = 8 = 2^3
 $$
 
-And since $|\mathcal{C}|= 2^4$ we have $2^4 \cdot 2^3 = 2^7=|(\mathbb{Z}/2)^7|$. Which shows that spheres with radius $r = \lfloor \frac{3-1}{2} \rfloor$ centered at codewords partitions $\mathbb{Z}/2)^7$. This example motivates the following theorem which we will use to restrict where we expect perfect codes to exist.
+And since $|\mathcal{C}|= 2^4$ we have $2^4 \cdot 2^3 = 2^7=|(\mathbb{Z}/2)^7|$. Which shows that spheres with radius $r = \lfloor \frac{3-1}{2} \rfloor$ centered at codewords partitions $(\mathbb{Z}/2)^7$. This example motivates the following theorem which we will use to restrict where we expect perfect codes to exist.
 
 \begin{thm}[\cite{pless}]
 In order for a perfect $t$-error-correcting [$n$,$k$] code over $GF(q)$ to exist we require that
 $$
-q^k ({n \choose 0} +  \sum_{i=1}^t ((q-1)^i{n \choose i}) = q^n. 
+q^k \sum_{i=0}^t ((q-1)^i{n \choose i} = q^n. 
 $$
 \end{thm}
 
-This places necessary, but not sufficient, conditions on $n$,$t$, and $k$. To find his codes Golay used Pascal's triangle and indexed the rows by $n = 0, 1, \ldots$ and the position of each element on its row by $t = 0,1, \ldots$. Then for a row $n$ if the first $t \geq 3$ elements of a row sum to a power $k$ of $q$, we suspect an [$n$,$k$] $t$-error-correcting code may exist. We will see a more explicit application in the next section where we will construct the perfect $\mathcal{G}_{23}$ which is a [23,11] 3-error-correcting code.
+This places necessary, but not sufficient, conditions on $n$,$t$, and $k$ for the existence of a perfect code. To find his codes Golay used Pascal's triangle and indexed the rows by $n = 0, 1, \ldots$ and the position of each element on its row by $t = 0,1, \ldots$. Then for a row $n$ if the first $t \geq 3$ elements of a row sum to a power $k$ of $q$, we suspect an [$n$,$k$] $t$-error-correcting code may exist. We will see a more explicit application in the next section where we will construct the perfect $\mathcal{G}_{23}$ which is a [23,11] 3-error-correcting code. 
+
+%Here we will take a moment to look at Golay's ternary perfect code $\mathcal{G}_{11}$ as an example of this theorem. Consider a perfect code $[11,6,5]_3$. Such a code would have $t= \frac{5-1}{2}=2$. Applying the theorem above:
+%$$
+%2^0 {11 \choose 0} + 2^1 {11 \choose 1} + 2^2 {11 \choose 2} \\
+%= 1 + 2 \cdot 11 + 4 \cdot 55 = 243 = 3^5 = 3^{n-k}.
+%$$
+%Since so we see that spheres of radius 2 centered at codewords in $\mathcal{G}_{11}$ partition $(\frac{\mathbb{Z}}{3})^11$ 
+
+
 %Then we can motivate the Golay Codes as steiner systems which we can show to be unique and equipped with known automorphism groups. These connections are the tools that allowed $\mathcal{G}_{24}$ to be used in the classification of finite simple groups and in particular aided in the discovery of Conway's sporadic groups $Co_1$,$Co_2$, and $Co_3$ [\cite{thompson}]. 
 \subsection{Constructions of $\mathcal{G}_{23}$}
-This section will concentrate on Golay's original construction of $\mathcal{G}_{23}$. First let us define what we are looking for.
+The code $\mathcal{G}_{23}$ is a perfect, binary code which is a subspace of $(\frac{\mathbb{Z}}{2})^23$. For such a code to exist we want to find we require that the order of of 
 Golay first used Pascal's triangle to find 3 binomial coefficients which summed to a power of 2. The 23rd row of Pascal's triangle indicates that
-$$\sum_{i=0}^3 {23 \choose i} = 1+23+253+1771 = 2048 = 2^{11}$$. This tell us that on the 23-cube, a sphere with Hamming radius atleast 3 contains a number of vertices which divides $2^{23}$ i.e. $V(S_{\geq 3}(x) )|2^{23}$ where $x$ is a vertex of the 23-cube. This implies that the minimum weight of $\mathcal{G}_{23}$ must be equal to $2*3+1=7$. Without justification Golay provided the generator matrix $\mathbf{A}$ for $\mathcal{G}_{23}$:
+$$\sum_{i=0}^3 {23 \choose i} = 1+23+253+1771 = 2048 = 2^{11}.$$ This tell us that on the 23-cube, a sphere with Hamming radius at least 3 contains a number of vertices which divides $2^{23}$ i.e. $V(S_{\geq 3}(x) )|2^{23}$ where $x$ is a vertex of the 23-cube. This implies that the minimum weight of $\mathcal{G}_{23}$ must be equal to $2*3+1=7$. Without justification Golay provided the generator matrix $\mathbf{A}$ for $\mathcal{G}_{23}$:
 
 $$\textbf{A} = \begin{array}{ccccccccccccc}
 & Y_1 & Y_2 & Y_3 & Y_4 & Y_5 & Y_6 & Y_7 & Y_8 & Y_9 & Y_{10} & Y_{11} & Y_{12} \\
