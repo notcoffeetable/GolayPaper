@@ -74,13 +74,48 @@
 \author{Dean Bisogno} % Your name
 
 \date{\normalsize\today} % Today's date or a custom date
+\newtheoremstyle{break}
+  {\topsep}{\topsep}%
+  {\itshape}{}%
+  {\bfseries}{.}%
+  {\newline}{}%
+\theoremstyle{break}
+\newtheorem{lem}{Lemma}
 \newtheorem{defn}{Definition}
 \newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newtheorem{prop}{Proposition}
+\newtheorem{ex}{Example}
+\renewcommand\qedsymbol{//}
 \newtheorem{lma}{Lemma}
 \setenumerate[1]{label=\Roman*.}
 \setenumerate[2]{label=\Alph*.}
 \setenumerate[3]{label=\roman*.}
 \setenumerate[4]{label=\alph*.}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Matlab,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
 
 \begin{document}
 \maketitle % Print the title
@@ -105,18 +140,22 @@ A linear $[n,k,d]_p$ code $\mathcal{C}$ is a subspace of a vector space $V$. We 
 \end{enumerate} 
 \end{defn}
 
-For a linear code, the minimum weight will coincide with the minimum distance. This is trivial to see since $\mathcal{C}$ is a vector subspace, it is closed under vector addition. Thus if any two vectors $\bf{v}$, $\bf{w}$ have the minimum distance between them, then $\bf{v}-\bf{v}=\bf{0}$ and $\bf{w}-\bf{v}$ are separated by the same distance.
+For a linear code, the minimum weight will coincide with the minimum distance. This is trivial to see since $\mathcal{C}$ is a vector subspace, it is closed under vector addition. Thus if any two vectors $\textbf{v}$, $\textbf{w}$ have the minimum distance between them, then $\textbf{v}-\textbf{v}=\textbf{0}$ and $\textbf{w}-\textbf{v}$ are separated by the same distance.
 
 \begin{defn}[perfect]
 A code $\mathcal{C}$ with minimum weight $d$ in a vector space $V$ is \textit{perfect} if all the vectors in $V$ are contained in spheres of radius $r=\lfloor \frac{d-1}{2} \rfloor$ centered around the codewords. We note that $r$ corresponds to the definition of the code's correctable number of errors.
 \end{defn}
 
+\begin{ex}
 The Hamming(7,4,3) codes present such a partition of $(\mathbb{Z}/2)^7$ as we can show. Consider an arbitrary $c \in \mathcal{C}$. Then the number of vectors in a sphere of radius 1 centered at $c$ is
 $$
 V_1(c) = \#\{x | d(x,c)\leq 1 \} = {7 \choose 1} + {7 \choose 0} = 8 = 2^3
 $$
 
-And since $|\mathcal{C}|= 2^4$ we have $2^4 \cdot 2^3 = 2^7=|(\mathbb{Z}/2)^7|$. Which shows that spheres with radius $r = \lfloor \frac{3-1}{2} \rfloor$ centered at codewords partitions $(\mathbb{Z}/2)^7$. This example motivates the following theorem which we will use to restrict where we expect perfect codes to exist.
+And since $|\mathcal{C}|= 2^4$ we have $2^4 \cdot 2^3 = 2^7=|(\mathbb{Z}/2)^7|$. Which shows that spheres with radius $r = \lfloor \frac{3-1}{2} \rfloor$ centered at codewords partitions $(\mathbb{Z}/2)^7$. 
+\end{ex}
+
+This example motivates the following theorem which we will use to restrict where we expect perfect codes to exist.
 
 \begin{thm}[\cite{pless}]
 In order for a perfect $t$-error-correcting [$n$,$k$] code over $GF(q)$ to exist we require that
@@ -125,7 +164,7 @@ q^k \sum_{i=0}^t ((q-1)^i{n \choose i} = q^n.
 $$
 \end{thm}
 
-This places necessary, but not sufficient, conditions on $n$,$t$, and $k$ for the existence of a perfect code. To find his codes Golay used Pascal's triangle and indexed the rows by $n = 0, 1, \ldots$ and the position of each element on its row by $t = 0,1, \ldots$. Then for a row $n$ if the first $t \geq 3$ elements of a row sum to a power $k$ of $q$, we suspect an [$n$,$k$] $t$-error-correcting code may exist. We will see a more explicit application in the next section where we will construct the perfect $\mathcal{G}_{23}$ which is a [23,11] 3-error-correcting code. 
+This places necessary, but not sufficient, conditions on $n$,$t$, and $k$ for the existence of a perfect code. To find his codes Golay used Pascal's triangle and indexed the rows by $n = 0, 1, \ldots$ and the position of each element on its row by $t = 0,1, \ldots$. Then for a row $n$ if the first $t \geq 3$ elements of a row satisfy the above theorem, we suspect an $[n,k, 2 \cdot t + 1]_q$ $t$-error-correcting code may exist. We will see a more explicit application in the next section where we will construct the perfect $\mathcal{G}_{23}$ which is a [23,12] 3-error-correcting code. 
 
 %Here we will take a moment to look at Golay's ternary perfect code $\mathcal{G}_{11}$ as an example of this theorem. Consider a perfect code $[11,6,5]_3$. Such a code would have $t= \frac{5-1}{2}=2$. Applying the theorem above:
 %$$
@@ -137,10 +176,40 @@ This places necessary, but not sufficient, conditions on $n$,$t$, and $k$ for th
 
 %Then we can motivate the Golay Codes as steiner systems which we can show to be unique and equipped with known automorphism groups. These connections are the tools that allowed $\mathcal{G}_{24}$ to be used in the classification of finite simple groups and in particular aided in the discovery of Conway's sporadic groups $Co_1$,$Co_2$, and $Co_3$ [\cite{thompson}]. 
 \subsection{Constructions of $\mathcal{G}_{23}$}
-The code $\mathcal{G}_{23}$ is a perfect, binary code which is a subspace of $(\frac{\mathbb{Z}}{2})^23$. For such a code to exist we want to find we require that the order of of 
-Golay first used Pascal's triangle to find 3 binomial coefficients which summed to a power of 2. The 23rd row of Pascal's triangle indicates that
-$$\sum_{i=0}^3 {23 \choose i} = 1+23+253+1771 = 2048 = 2^{11}.$$ This tell us that on the 23-cube, a sphere with Hamming radius at least 3 contains a number of vertices which divides $2^{23}$ i.e. $V(S_{\geq 3}(x) )|2^{23}$ where $x$ is a vertex of the 23-cube. This implies that the minimum weight of $\mathcal{G}_{23}$ must be equal to $2*3+1=7$. Without justification Golay provided the generator matrix $\mathbf{A}$ for $\mathcal{G}_{23}$:
 
+In this section we will justify the existence of the perfect $[23,12,7]_2$ Golay code by showing that its $n$,$k$,$t$,$q$ parameters specify a partition of the vector space $(\frac{\mathbb{Z}}{2})^{23}$ if such a code exists. Then we will reproduce Golay's original generator matrix and see a snippet of code that we can use to investigate the mechanics of the code. Next we will explore the construction of the original matrix followed by a construction as a cyclic code to see that there multiple ways to build the same code. Finally we will specify how to extend the perfect code $G_{23}$ to the imperfect, but more useful, $G_{24}$ code with parameters $[24,12,8]_2$.
+
+\subsubsection{Perfection of $[23,12,7]_2$}
+\begin{prop}
+A code $\mathcal{C}$ with parameters $[23,12,7]_2$ partitions the space $(\frac{\mathbb{Z}}{2})^{23}$ by spheres of radius $r=3$. Thus $\mathcal{C}$ is perfect.
+\end{prop}
+
+\begin{proof}
+For the specified $[23,12,7]_2$ parameters we can find the volume of a sphere centered at an arbitrary codeword $\textbf{c}$ in $\mathcal{C}$.
+$$
+V_3(\textbf{c}) = \sum_{i=0}^{3} {23 \choose i} = 1 + 23 + 253 + 1771 = 2048 = 2^{11} = 2^{23-12}.
+$$
+Therefore we see that $2^{11} \cdot 2^{12} = 2^{23}$ so the volume of spheres centered at codewords divides the number of vectors in $(\frac{\mathbb{Z}}{2})^{23}$, showing that a $[23,12,7]_2$ code would be perfect.
+\end{proof}
+
+Now that we know a code with such parameters would be perfect, let us see the code itself. After we get a sense of how to work with the code, we will see how it can be constructed.
+
+\subsubsection{Overview of $\mathcal{G}_{23}$}
+In this section we will first look at the generator matrix supplied by Golay in 1949 and see how we can use it to generate messages from data, and check whether an error was made in transmission. First let us define a generator matrix.
+
+\begin{defn}[Generator Matrix]
+Consider linear $[n,k,d]_q$ code $\mathcal{C}$, and a data vector $\textbf{v}$. The generator matrix $\textbf{A}$ is a matrix such that we can build message vectors as below. 
+$$
+\textbf{m} = (\textbf{v},  \textbf{A} \textbf{v}) = \textbf{v} [\textbf{I}_k : A^T]
+$$
+
+We also require that $\mathcal{C} = Ker([\textbf{A} : \textbf{I}_{n-k}])$ so that for a valid message vector $\textbf{m}$
+$$
+[\textbf{A} : \textbf{I}_{n-k}] \textbf{m} \equiv 0 \; mod(q).
+$$
+\end{defn}
+
+First we will exhibit the parity check matrix provided by Golay in his original paper, and reference it as we reconstruct.
 $$\textbf{A} = \begin{array}{ccccccccccccc}
 & Y_1 & Y_2 & Y_3 & Y_4 & Y_5 & Y_6 & Y_7 & Y_8 & Y_9 & Y_{10} & Y_{11} & Y_{12} \\
    X_1 & 1 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1\\
@@ -155,9 +224,44 @@ $$\textbf{A} = \begin{array}{ccccccccccccc}
 X_{10} & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1\\
 X_{11} & 0 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
 \end{array}$$
-Using this matrix we can map data vectors in $(\mathbb{Z}/2)^{12}$ to parity check words in $(\mathbb{Z}/2)^{11}$. Then for a data vector $\mathbf{v} \in (\mathbb{Z}/2)^{23}$ we can build the message $\mathbf{m} = (\mathbf{v},\mathbf{A}\mathbf{v})$. The parity check matrix is then $[\mathbf{A}:\mathbf{I}_{11}]$, and is a linear transformation $$[\mathbf{A}:\mathbf{I}_{11}]: (\mathbb{Z}/2)^{23} \longrightarrow (\mathbb{Z}/2)^{11},$$ where $\mathcal{G}_{23}=Ker([\mathbf{A}:\mathbf{I}_{11}])$. Thus to check to see if a received message $\mathbf{m}$ has an error we just check $\mathbf{Pm} \equiv 0 (mod 2)$.
 
-The construction given by Golay for matrix $\textbf{A}$ depends upon a sketch of five lines.
+As detailed in the definition we can use this matrix to map data vectors in $(\mathbb{Z}/2)^{12}$ to parity check words in $(\mathbb{Z}/2)^{11}$. Then for a data vector $\mathbf{v} \in (\mathbb{Z}/2)^{23}$ we can build the message $\mathbf{m} = (\mathbf{v},\mathbf{A}\mathbf{v})$. The parity check matrix is then $\textbf{P} = [\mathbf{A}:\mathbf{I}_{11}]$, and is a linear transformation from the space $(\mathbb{Z}/2)^{23}$ to the data space $(\mathbb{Z}/2)^{12}$ with  $\mathcal{G}_{23}=Ker([\mathbf{A}:\mathbf{I}_{11}])$. Thus to check to see if a received message $\mathbf{m}$ has an error we just check $\mathbf{Pm} \equiv 0 \; (mod 2)$.
+
+The following code can be used to experiment with the above concepts.
+\begin{lstlisting}
+% Matlab Code for experimenting with the perfect binary Golay code.
+% Generator Matrix for G_{23}
+A= [1 0 0 1 1 1 0 0 0 1 1 1;
+    1 0 1 0 1 1 0 1 1 0 0 1;
+    1 0 1 1 0 1 1 0 1 0 1 0;
+    1 0 1 1 1 0 1 1 0 1 0 0;
+    1 1 0 0 1 1 1 0 1 1 0 0;
+    1 1 0 1 0 1 1 1 0 0 0 1;
+    1 1 0 1 1 0 0 1 1 0 1 0;
+    1 1 1 0 0 1 0 1 0 1 1 0;
+    1 1 1 0 1 0 1 0 0 0 1 1;
+    1 1 1 1 0 0 0 0 1 1 0 1;
+    0 1 1 1 1 1 1 1 1 1 1 1];
+% Alternative Generator Matrix
+G = horzcat(eye(12),A.');
+data = [1 0 0 0 0 0 0 0 0 0 0 0].';
+% Make message with just A
+message1 = vertcat(data,(A*data));
+% Make message with G
+message2 = (d.')*G;
+%Show that we mapped to the same word
+message1 - message2
+%Parity Check Matrix
+P = horzcat(A,eye(11));
+% Let's add errors
+error = message1+[1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ].';
+% Check to see if we detect them
+mod(P*error,2)
+\end{lstlisting}
+
+
+\subsubsection{Original construction of the $\mathcal{G}_{23}$ generator matrix}
+The construction given by Golay for generator matrix $\textbf{A}$ uses a sketch of five lines labeled $A$,$B$,$\ldots$, $E$.
 
 \begin{figure}[!ht]
   \centering
@@ -167,7 +271,7 @@ The construction given by Golay for matrix $\textbf{A}$ depends upon a sketch of
   \label{fig:cstori}
 \end{figure}
 
-Then we label the minor matrix consisting of rows $X_1 \ldots X_{10}$ and columns $Y_2 \ldots Y_{12}$.
+Then we label the minor matrix consisting of rows $X_1 \ldots X_{10}$ and columns $Y_2 \ldots Y_{12}$ in the following way.
 
 $$\textbf{A} = \begin{array}{ccccccccccccc}
 &&       A  &  B  &  C  &  D  &  E &\sigma_1&\sigma_2&\sigma_3&\sigma_4&\sigma_5&\sigma_6\\
@@ -185,29 +289,35 @@ DE & X_{10} & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1\\
 \end{array}$$
 $$\sigma_1=(ABEDC), \sigma_2=(ABCED), \sigma_3=(ABDCE),$$
 $$\sigma_4=(ACEBD), \sigma_5=(ACBDE), \sigma_6=(ADCBE)$$
-Then for columns $Y_2 \ldots Y_6$ we place a 0 in the rows corresponding to intersections with the respective line, and 1 otherwise. In columns $Y_6 \ldots Y_{12}$ we place 0's in the rows where the corresponding transposition appears in the cycle, and ones elsewhere. The resulting matrix has rows and columns of minimum weight 6, so 
+Then for columns $Y_2 \ldots Y_6$ we place a 0 in the rows corresponding to intersections with the respective line, and 1 otherwise. In columns $Y_6 \ldots Y_{12}$ we place 0's in the rows where the intersection appears in the cycle and ones elsewhere, i.e. $AB$ appears in $\sigma_1$, $\sigma_2$, and $\sigma_3$ so columns 7,8, and 9 have 0's in the first row. The resulting matrix has rows and columns of minimum weight 6, thus we append 
 $$Y_1 = [ \begin{array}{ccccccccccc} 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 0\end{array}]^T$$
-$$X_{12} = [\begin{array}{cccccccccccc} 0& 1& 1& 1& 1& 1& 1& 1& 1& 1\end{array}]$$ fixes the minimum weight to 7 [\cite{thompson}]. To construct $\mathcal{G}_{24}$ we append a 1 to each codeword of odd weight in $mathcal{G}_{23}$ and a zero to all codewords of even weight. This increases the minimum weight to 8, so while the code is no longer perfect, it can detect 7 errors rather than the 6 detectable by $\mathcal{G}_{23}$.
+$$X_{12} = [\begin{array}{cccccccccccc} 0& 1& 1& 1& 1& 1& 1& 1& 1& 1\end{array}]$$
+in order to fix the minimum weight to 7 [\cite{thompson}]. This concludes the constructions of the generator provided by Golay in 1949.
 
-While the above recounts Golay's original construction of the generator matrix of $G_{23}$, history has demonstrated that the $G_{24}$ code is much more useful and more intuitive constructions of either code are available.
+While the above recounts Golay's original construction of the generator matrix of $G_{23}$, we are curious if there is a more formal method to construct $G_{23}$. We consider how we might build $\mathcal{G}_{23}$ as a cyclic code.
 
-\subsection{As a Cyclic Code} (might cut this section)
-We can construct $\mathcal{G}_{23}$ more easily by considering the factors of $$x^{23}-1=(x+1)(x^{11}+x^9+x^7+x^6+x^5+x+1)(x^{11}+x^{10}+x^6+x^5+x^4+x^2+1)$$ over $\mathbb{Z}/2$. If we consider $p(x)=x^{11}+x^9+x^7+x^6+x^5+x+1$ (though either degree 11 factor will generate the same code), then we know since $p|x^{23}-1$, that $<p(x)>$ is an ideal in the ring $\mathbb{Z}/2[x]$. Then $<p(x)>$ is closed under multiplication, in particular for any $g(x)\in<p(x)>$, we know $x*g(x)\in<p(x)>$. Further, in $\mathbb{Z}/2[x]$, multiplication by $x$ corresponds to the shift operator. The corresponding matrix for this code is 
+\subsubsection{As a Cyclic Code}
+We can construct $\mathcal{G}_{23}$ more easily by considering the factors of $$x^{23}-1=(x+1)(x^{11}+x^9+x^7+x^6+x^5+x+1)(x^{11}+x^{10}+x^6+x^5+x^4+x^2+1)$$ over $\mathbb{Z}/2$. If we consider $p(x)=x^{11}+x^9+x^7+x^6+x^5+x+1$ (though either degree 11 factor will generate the same code), then we know since $p|x^{23}-1$, that $<p(x)>$ is an ideal in the ring $\frac{\mathbb{Z}/2[x]}{<x^{23}-1>}$. Then $<p(x)>$ is closed under multiplication, in particular for any $g(x)\in<p(x)>$, we know $x \cdot g(x)\in<p(x)>$. Further, in $\frac{\mathbb{Z}/2[x]}{<x^{23}-1>}$, multiplication by $x$ corresponds to the shift operator. The corresponding matrix for this construction code is below.
 $$\textbf{G} = \begin{array}{ccccccccccccc}
-       p(x) & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1\\
-   x^1*p(x) & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1\\
-   x^2*p(x) & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0\\
-   x^3*p(x) & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0\\
-   x^4*p(x) & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0\\
-   x^5*p(x) & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1\\
-   x^6*p(x) & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1\\
-   x^7*p(x) & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1\\
-   x^8*p(x) & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0\\
-   x^9*p(x) & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1\\
-x^{10}*p(x) & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 0\\
+             p(x) & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1\\
+   x^1 \cdot p(x) & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1\\
+   x^2 \cdot p(x) & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0\\
+   x^3 \cdot p(x) & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0\\
+   x^4 \cdot p(x) & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0\\
+   x^5 \cdot p(x) & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1\\
+   x^6 \cdot p(x) & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1 & 1\\
+   x^7 \cdot p(x) & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 1\\
+   x^8 \cdot p(x) & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 0\\
+   x^9 \cdot p(x) & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1\\
+x^{10} \cdot p(x) & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0\\
 \end{array}$$
 
-\subsection{As a Steiner System}
+We see that each row is of weight seven, and the rows are orthogonal with respect to the dot product $\cdot \; (mod 2)$. It is an $11 \times 12$ matrix similar to Golay's original matrix, so it maps a 12 dimensional space into an 11 dimensional space. Consequently, a vector $(\textbf(v), \textbf{Av})$ is length 23 and lives in a $[23,12,7]_2$ code which must be perfect as we showed previously. This corresponds to $\mathcal{G}_{23}$ since it is unique, we will show this later after we show that we can construct the Golay codes from Steiner systems which are unique.
+
+\subsubsection{Golay $[24,12,8]_2$ code $\mathcal{G}_{23}$ and $\mathcal{G}_{23}$}
+The code $\mathcal{G}_{23}$ can be extended by adding a check digit to each codword.
+
+\subsubsection{As a Steiner System}
 This is one of the most interesting constructions of the Golay code as it uses particular properties of the code to show that it satisfies the Assmus-Mattson Theorem which proves the existence of the Steiner system construction. Once we know that our construction is valid, we can use properties of Steiner systems to prove the uniqueness of the Golay code and to identify the automorphism group of the $\mathcal{G}_{24}$ code.
 
 \begin{defn}
