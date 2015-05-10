@@ -22,6 +22,7 @@
 
 \usepackage{tikz}
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{float}
 %\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
 
 
@@ -125,7 +126,7 @@
 The Golay code developed by Marcel Golay in 1949 has had significant impact on the advancement of coding theory, the classification of simple finite groups, and communication systems. Golay's 1949 article ``Notes on Digital Coding'' appeared in the June edition of the Proceedings of the IRE [\cite{golay}]. In ``Notes on Digital Coding'' Golay presented a generalization of the Hamming(7,4,3) code which he had read about in Shannon's 1948 paper. After generalizing the perfect, single error-correcting codes, Golay then justifies the existence of two codes which can correct multiple errors, the perfect binary Golay $[23,12,11]_2$ code $\mathcal{G}_{23}$, and the ternary Golay $[11,6,5]_3$ code $\mathcal{G}_{11}$. At the bottom of the article Golay supplied generator matrices for his codes, but lacked any explanation of their construction. Golay would provide explanation of his matrices' construction in 1954. Though brief and without significant justification, Berlekamp called the article ``the best single published page'' and Zaremba once told Golay that he had ``said more in half a page than others have said in twenty pages'' [\cite{thompson}]. The remainder of this section will focus on constructions of $\mathcal{G}_{23}$, $\mathcal{G}_{24}$, and some interesting properties they satisfy. With these constructions and their properties in hand, we will then be able to motivate the study of the Golay codes as Steiner systems with known automorphism groups.
 
 \subsection{Important Definitions}
-We first need to equip ourselves with the primitive definitions used when discussing linear codes.
+We first need to remind ourselves of the definitions of the terms we will use when discussing linear codes.
 
 \begin{defn}[linear codes and their properties]
 A linear $[n,k,d]_p$ code $\mathcal{C}$ is a subspace of a vector space $V$. We define the following properties:
@@ -142,7 +143,7 @@ A linear $[n,k,d]_p$ code $\mathcal{C}$ is a subspace of a vector space $V$. We 
 
 For a linear code, the minimum weight will coincide with the minimum distance. This is trivial to see since $\mathcal{C}$ is a vector subspace, it is closed under vector addition. Thus if any two vectors $\textbf{v}$, $\textbf{w}$ have the minimum distance between them, then $\textbf{v}-\textbf{v}=\textbf{0}$ and $\textbf{w}-\textbf{v}$ are separated by the same distance.
 
-\begin{defn}[perfect]
+\begin{defn}[Perfect Code]
 A code $\mathcal{C}$ with minimum weight $d$ in a vector space $V$ is \textit{perfect} if all the vectors in $V$ are contained in spheres of radius $r=\lfloor \frac{d-1}{2} \rfloor$ centered around the codewords. We note that $r$ corresponds to the definition of the code's correctable number of errors.
 \end{defn}
 
@@ -229,8 +230,8 @@ As detailed in the definition we can use this matrix to map data vectors in $(\m
 
 The following code can be used to experiment with the above concepts.
 \begin{lstlisting}
-% Matlab Code for experimenting with the perfect binary Golay code.
-% Generator Matrix for G_{23}
+% Matlab Code for experimenting with the perfect, binary Golay code.
+% Generator Matrix for G_{23} parity digits
 A= [1 0 0 1 1 1 0 0 0 1 1 1;
     1 0 1 0 1 1 0 1 1 0 0 1;
     1 0 1 1 0 1 1 0 1 0 1 0;
@@ -242,7 +243,7 @@ A= [1 0 0 1 1 1 0 0 0 1 1 1;
     1 1 1 0 1 0 1 0 0 0 1 1;
     1 1 1 1 0 0 0 0 1 1 0 1;
     0 1 1 1 1 1 1 1 1 1 1 1];
-% Alternative Generator Matrix
+% Complete Generator Matrix
 G = horzcat(eye(12),A.');
 data = [1 0 0 0 0 0 0 0 0 0 0 0].';
 % Make message with just A
@@ -297,7 +298,7 @@ in order to fix the minimum weight to 7 [\cite{thompson}]. This concludes the co
 While the above recounts Golay's original construction of the generator matrix of $G_{23}$, we are curious if there is a more formal method to construct $G_{23}$. We consider how we might build $\mathcal{G}_{23}$ as a cyclic code.
 
 \subsubsection{As a Cyclic Code}
-We can construct $\mathcal{G}_{23}$ more easily by considering the factors of $$x^{23}-1=(x+1)(x^{11}+x^9+x^7+x^6+x^5+x+1)(x^{11}+x^{10}+x^6+x^5+x^4+x^2+1)$$ over $\mathbb{Z}/2$. If we consider $p(x)=x^{11}+x^9+x^7+x^6+x^5+x+1$ (though either degree 11 factor will generate the same code), then we know since $p|x^{23}-1$, that $<p(x)>$ is an ideal in the ring $\frac{\mathbb{Z}/2[x]}{<x^{23}-1>}$. Then $<p(x)>$ is closed under multiplication, in particular for any $g(x)\in<p(x)>$, we know $x \cdot g(x)\in<p(x)>$. Further, in $\frac{\mathbb{Z}/2[x]}{<x^{23}-1>}$, multiplication by $x$ corresponds to the shift operator. The corresponding matrix for this construction code is below.
+We can construct $\mathcal{G}_{23}$ more easily by considering the factors of $$x^{23}-1=(x+1)(x^{11}+x^9+x^7+x^6+x^5+x+1)(x^{11}+x^{10}+x^6+x^5+x^4+x^2+1)$$ over $\mathbb{Z}/2$. If we consider $p(x)=x^{11}+x^9+x^7+x^6+x^5+x+1$ (though either degree 11 factor will generate the same code), then we know since $p|x^{23}-1$, that $<p(x)>$ is an ideal in the ring $\frac{\mathbb{Z}/2[x]}{<x^{23}-1>}$. Then $<p(x)>$ is closed under multiplication, in particular for any $g(x)\in<p(x)>$, we know $x \cdot g(x)\in<p(x)>$. Further, in $\frac{\mathbb{Z}/2[x]}{<x^{23}-1>}$, multiplication by $x$ corresponds to the shift operator. The corresponding matrix for this construction is below.
 $$\textbf{G} = \begin{array}{ccccccccccccc}
              p(x) & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1\\
    x^1 \cdot p(x) & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1\\
@@ -312,21 +313,42 @@ $$\textbf{G} = \begin{array}{ccccccccccccc}
 x^{10} \cdot p(x) & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0\\
 \end{array}$$
 
-We see that each row is of weight seven, and the rows are orthogonal with respect to the dot product $\cdot \; (mod 2)$. It is an $11 \times 12$ matrix similar to Golay's original matrix, so it maps a 12 dimensional space into an 11 dimensional space. Consequently, a vector $(\textbf(v), \textbf{Av})$ is length 23 and lives in a $[23,12,7]_2$ code which must be perfect as we showed previously. This corresponds to $\mathcal{G}_{23}$ since it is unique, we will show this later after we show that we can construct the Golay codes from Steiner systems which are unique.
+We see that each row is of weight 7, and the rows are orthogonal with respect to the dot product $\cdot \; (mod 2)$. It is an $11 \times 12$ matrix similar to Golay's original matrix, so it maps a 12 dimensional space into an 11 dimensional space. Consequently, a vector $(\textbf(v), \textbf{Av})$ is length 23 and lives in a $[23,12,7]_2$ code which must be perfect as we showed previously. This corresponds to $\mathcal{G}_{23}$ since it is unique, we will show this later after we show that we can construct the Golay codes from Steiner systems which are unique.
 
-\subsubsection{Golay $[24,12,8]_2$ code $\mathcal{G}_{23}$ and $\mathcal{G}_{23}$}
-The code $\mathcal{G}_{23}$ can be extended by adding a check digit to each codword.
+\subsection{Golay $[24,12,8]_2$ code $\mathcal{G}_{24}$ and $\mathcal{G}_{23}$}
+The code $\mathcal{G}_{23}$ can be extended by adding a check digit to each codeword such that all codewords have even weight. More explicitly
+$$
+\mathcal{G}_{24} = \{ (\textbf{c}, \delta (\textbf{c})) | \textbf{c} \in \mathcal{G}_{23}\}
+$$
+$$
+\delta (\textbf{v}) = \left\{
+     \begin{array}{ll}
+       1 & : weight(\textbf{v}) \; even\\
+       0 & : otherwise
+     \end{array}
+   \right.
+$$
+
+Several properties of $\mathcal{G}_{24}$ are apparent from this description. The length $n$ of codewords is 24, the minimum weight increases from 7 to 8, and the dimension of the code remains 12. We can check to see if this code is perfect:
+$$
+t = \lfloor \frac{8-1}{2} \rfloor = 3
+$$
+$$
+\sum_{i=0}^{3} {24 \choose i} = 1 + 24 + 276 + 2024 = 2325 = 2^{11.1830\ldots}
+$$
+
+Clearly, since there is no integer power of 2 equal to 2325, a perfect code with the parameters $[24,12,8]_2$ cannot exist. And so we see that $\mathcal{G}_{24}$ is not perfect, though it contains the perfect $\mathcal{G}_{23}$ which we can extract by deleting the last concatenated parity digit. This completes the formal definition of $\mathcal{G}_{24}$, next we will consider its powerful connections with a unique Steiner system.
 
 \subsubsection{As a Steiner System}
-This is one of the most interesting constructions of the Golay code as it uses particular properties of the code to show that it satisfies the Assmus-Mattson Theorem which proves the existence of the Steiner system construction. Once we know that our construction is valid, we can use properties of Steiner systems to prove the uniqueness of the Golay code and to identify the automorphism group of the $\mathcal{G}_{24}$ code.
+This is one of the most interesting ways of interacting with the Golay code as we will use particular properties of the code to show that it satisfies the Assmus-Mattson Theorem which will help us prove that $\mathcal{G}_{24}$ holds the Steiner system $S(5,8,24)$. Once we know that relationship between $S(5,8,24)$ and $\mathcal{G}_{24}$ is valid, we can use properties of Steiner systems to prove the uniqueness of the Golay code and to identify the automorphism group of the $\mathcal{G}_{24}$ code. A similar argument can be made regarding $\mathcal{G}_{23}$ but we will concentrate on $\mathcal{G}_{24}$ as it has been historically more significant in this setting.
 
-\begin{defn}
+First, the definitions of a t-design and the special cases called Steiner systems.
+\begin{defn}[t-designs and Steiner systems]
 Consider integers $1 \leq t < k < v$ and $\lambda$. The design $t-(k,v,\lambda)$ is a pair of sets $(\mathfrak{X},\mathfrak{B})$ where $|\mathfrak{X}|=v$ and $\mathfrak{B}$ contains size $k$ subsets of $\mathfrak{X}$, called `blocks,' such that every size $t$ subset of $\mathfrak{X}$ is contained in exactly $\lambda$ blocks. In the particular case that $\lambda=1$, we call it a \textit{Steiner system} S(t,k,v).
 \end{defn}
 
-The Fano plane is the geometry associated with S(2,3,7). Seven lines partition the seven points, where each line contains exactly three points, and each pair of points uniquely designates a line.
 
-\begin{figure}[hbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[scale=2.5]
 
@@ -352,24 +374,26 @@ The Fano plane is the geometry associated with S(2,3,7). Seven lines partition t
 \end{tikzpicture}
 \caption{Fano Plane S(2,3,7)} \label{fig:fplane}
 \end{figure}
+The Fano plane is the geometry associated with S(2,3,7). Seven lines partition the seven points, where each line contains exactly three points, and each pair of points uniquely designates a line.
 
-In particular we want to use the Assmus-Mattson theorem to find the designs corrsponding to the Golay codes. Doing so will require several definitions.
-\begin{defn}
-Suppose $\mathcal{C}$ is a linear code in vectorspace $V$. We denote 
+
+Using the Assmus-Mattson theorem to find the designs corresponding to $\mathcal{G}_{24}$ will require several definitions.
+\begin{defn}[Dual Code and Totally Singular Code]
+Suppose $\mathcal{C}$ is a linear code in vector space $V$. We denote 
 $$\mathcal{C}^* = \{ \bm{u} \in V | \bm{u} \cdot \bm{w} = 0 \; \forall \; \bm{w} \in V \}. $$
 If $\mathcal{C}$ is an $[n,k]$ code, then $\mathcal{C}^*$ is an $[n,n-k]$ code.
 Furthermore, if $\mathcal{C}\subseteq\mathcal{C}^*$ then we call $\mathcal{C}$ \textit{totally singular}.
 \end{defn}
 We note that $\mathcal{G}_{24}$ is totally singular, because the rows of its generator matrix are orthogonal.
 More explicitely $\bm{r}_i \cdot \bm{r}_j$ = 0 for any two rows in the matrix $\bm{A}$ of the generator matrix $[\bm{I}_{12}:\bm{A}]$ above. This implies $\mathcal{G}_{24} \subseteq \mathcal{G}_{24}^*$.
-\begin{defn}
+\begin{defn}[Self-dual]
 If $\mathcal{C}$ is totally singular and $dim(\mathcal{C})=\frac{dim(V)}{2}$ then we can $\mathcal{C}$ is \textit{self-dual}.
 \end{defn}
 We just showed that $\mathcal{G}_{24}$ is totally singular, and we already know that $dim(\mathcal{G}_{24}) = 12 = \frac{24}/2$, so $\mathcal{G}_{24}$ is self-dual.
-\begin{defn}[We might not need this definition]
-A code $\mathcal{C}$ is \textit{double-even} if for every $x\in \mathcal{C}$, the weight of $c$ is divisible by 4.
-\end{defn}
-\begin{thm}
+%\begin{defn}[We might not need this definition]
+%A code $\mathcal{C}$ is \textit{double-even} if for every $x\in \mathcal{C}$, the weight of $c$ is divisible by 4.
+%\end{defn}
+\begin{thm}[Assmus-Mattson]
 Let $\mathcal{C}$ be an $[n,k,d]$ binary code, and let $0<t<d$. Let $B_i$ be the number of vectors of weight $i$ in $\mathcal{C}^*$, and let
 $$
 s = |{i|B_i \not= 0 \; \& \; 0<i\leq n-t}|.
@@ -377,13 +401,57 @@ $$
 If $s\leq d-t$, then the vectors of weight $d$ in $\mathcal{C}$ hold a t-design and the vectors of any weight $i\leq n-t$ and $B_i\not=0$ hold a t-design.
 \end{thm}
 
-As we've shown that $\mathcal{G}_{24}=\mathcal{G}_{24}^*$, and we know that we can correct 3 errors in any weight 8 word. We are motived to show that $\mathcal{G}_{24}$ contains a $5-(8,24,1)$ design. Since, all vectors in $\mathcal{G}_{24}$ are of weight 8, 12, or 16, we know that $s=3 \leq 8-5$. So the weight eight words contain the Steiner system S(5,8,24). Similar systems can be identified for code words of weight 12 and 16 [\cite{pless}]. 
+Which naturally leads into the question we have been pursuing.
+\begin{prop}
+The $[24,12,8]_2$ code $\mathcal{G}_{24}$ is $S(5,8,24)$.
+\end{prop}
+\begin{proof} 
+Since, all vectors in $\mathcal{G}_{24}$ are of weight 8, 12, or 16, we know that $s=3 \leq 8-5$. So the weight 8 words contain a 5-design [\cite{pless}]. More specifically we know that the minimum distance of the code is 8 and we can correct 3 errors, so 5 digits define a unique codeword, which demonstrates that the 5-design is in fact $S(5,8,24)$. This argument can also be applied to $\mathcal{G}_{23}$ to show that it corresponds to $S(4,7,23)$.
+\end{proof}.
 
 \section{Uniqueness of $\mathcal{G}_{24}$}
-This section will briefly cover the uniqueness proof of $\mathcal{G}_{24}$, these are important as they show that our three constructions actually generate the same code.
-\section{The Automorphism Group of $\mathcal{G}_{24}$, $M_{24}$}
-Knowing that our constructions are all equiavlent, we can leverage how $\mathcal{G}_{24}$ behaves under $M_{24}$. The Steiner system construction is important here because $M_{24}$ was first understood as the automorphism group of S(5,8,24).
+So far we have given two constructions of $\mathcal{G}_{23}$ and we have shown how to turn any construction of $\mathcal{G}_{23}$ into a construction of $\mathcal{G}_{24}$. Then we showed how we could consider $\mathcal{G}_{24}$ a Steiner system. We would like to say that the Golay codes are unique so that we can be sure that these constructions actually give us the same code. Again we will focus on $\mathcal{G}_{24}$ though our results will apply equally to $\mathcal{G}_{23}$. We will also use for free the uniqueness of the Steiner systems corresponding to our codes. What that leaves us to show, is that the code itself is unique and that no other code can correspond to $S(5,8,24)$.
 
+\begin{thm}[Uniqueness of $\mathcal{G}_{24}$]
+ The $[24,12,8]_2$ code $\mathcal{C}$ is unique.
+\end{thm}
+
+\begin{proof}
+We will follow the proof given by Vera Pless in [\cite{pless}]. We want show that five coordinates specify a unique weight 8 codeword. We will first consider $\mathcal{C}$ punctured in some coordinate which we will label $\infty$ such that we preserve the dimension of the code. We call the resulting code $\mathcal{C}^{'}$ which has parameters $[23,12,7]_2$ or $[23,12,8]_2$. We showed that $[23,12,7]_2$ is perfect while $[23,12,8]_2$ is not, thus we argue $\mathcal{C}^{'}$ must be $[23,12,7]_2$ because $[23,12,8]_2$ does not partition the space. Consequently, we know that $[23,12,7]_2$ contains $S(4,7,23)$.
+Now consider a set $S$ of five points containing $\infty$. Without $\infty$ this specifies a block in $S(4,7,23$ with weight 7. Because $\mathcal{C}$ has minimum weight 8, we know that the coordinate occupied by $\inf$ must be a 1 so that in $\mathcal{C}$ the weight is 8 and is contained in a unique block in $S(5,8,24)$.
+Next consider a set $S$ of five points which does not include $\inf$. Then it exists in a unique sphere of radius centered at a codeword $\textbf{w}$ of weight 7 or a codeword $\textbf{v}$ of weight 8 in $\mathcal{C}$. From the previous argument $\textbf{v}$ must have a 1 at $\infty$. If $\textbf{w}$ has a 0 at $\inf$ then $S$ is contained in a a unique weight 8 set in $C$. If $\textbf{w}$ has a 1 at $\infty$, then pick four other points in $\mathbf{w}$. These five points are contained in a weight 8 set $\textbf{x}$ in $\mathcal{C}$ by the 4-design in $\mathcal{C}^{'}$. Then $weight(\textbf{x} + \textbf{w}) \leq 7$ which contradicts the minimum weight of $[24,12,8]_2$ being 8. Thus $\textbf{w}$ must contain a 5-design corresponding to $(5,8,24)$ which is unique by assumption.
+\end{proof}
+
+This is encouraging because we can be sure that all the constructions we have given of $\mathcal{G}_{24}$ actually produce the same code. The technique of puncturing a code and adding a point of infinite is a nice technique which will aid us in understanding the automorphism group of $\mathcal{G}_{24}$.
+
+\section{The Automorphism Group of $\mathcal{G}_{24}$, $M_{24}$}
+Knowing that $\mathcal{G}_{24}$ corresponds to the geometry of $S(5,8,24)$ work done by Witt showed that the automorphism group of $\mathcal{G}_{24}$ is $M_{24}$, the automorphism group of $S(5,8,24)$. We will only briefly touch on the basic definition and properties of $M_{24}$. For our purposes it is historically interesting as these relationships were exploited by Conway when classifying his three sporadic groups.
+\begin{defn}[k-fold transitivity]
+Let $G$ be a group acting on a set $S$, and $k \leq |S|$. We say that $G$ is k-fold transitive on $S$ if, given any two ordered k-tuples $(x_1, \ldots , x_k)$ and $(y_1, \ldots, y_k)$ of elements in $S$, there is an element $g \in G$ such that $x_i g = y_i$ for all $i \in 1,\ldots , k$, if such a $g \in G$ is unique, then we call $G$ sharply k-fold transitive on $S$.
+\end{defn}
+\begin{defn}[Mathieu Group $M_{24}$]
+The sporadic group $M_{24}$ is the automorphism group of $S(5,8,24)$ generated by
+\begin{enumerate}
+\item $\alpha = (\infty)(0 \: 1 \: 2 \: \ldots \: 22)$
+\item $\gamma = (0 \: \infty)(1 \: 22)(2 \: 11)(3 \: 15)(4 \: 17)(5 \: 9)(6 \: 19)(7 \: 13)(8 \: 20)(10 \: 16)(12 \: 21)(14 \: 18)$
+\item $\beta = (\infty)(0)(3)(15)(1 \: 18 \: 4 \: 2 \: 6)(5 \: 21 \: 20 \: 10 \: 7)(8 \: 16 \: 13 \: 9 \: 12)(11 \: 19 \: 22 \: 14 \: 17).$
+\end{enumerate}
+$M_{24}$ operates 5-fold transitively on $S(5,8,24)$ [\cite{conway}].
+\end{defn}
+
+\begin{thm}[The order of $M_{24}$]
+The order of $M_{24}$ is $759 \cdot 16 \cdot 20160.$
+\end{thm}
+
+We will provide a extremely truncated sketch of the proof.
+\begin{proof}
+Let $\Omega = \{0, \: 1, \: \ldots, \: 22, \: \infty \}$, $F$ the subgroup of $M_{24}$ which permutes $\{ a_1, \ldots , a_8 \}$ and $H$ be the subgroup of $F$ that fixes $a_9$ of $\Omega$. Then we can show that $[M_{24} : F] = 759$, $|H| = |A_8| = 20160$, $[F:H] = 16$, therefore $|M_{24}| = 759 \cdot 16 \cdot 20160 = 244,823,040.$
+\end{proof}
+
+While $M_{24}$ is the automorphism group of $\mathcal{G}_{24}$, the other Mathieu groups are stabilizers of subsets of $\mathcal{G}_{24}$. Where $M_{23}$ stabilizes a single coordinate, $M_{22}$ stabilizes a pair of coordinates, $M_{12}$ stabilizes a codewords of weight 12, and $M_{11}$ stabilizes a codeword of weight 12 and one other coordinate [$find \; reference$]. All together these groups are subgroups of Conway's simple sporadic groups, and ultimately the Monster group.
+
+\section{conclusion}
+So we see how Golay's half page article has had ramifications throughout mathematics, making connection to combinatorics, geometry, algebra, and helping establish coding theory as an independent field. Outside of mathematics Golay's code has carried pictures taken from outside of our solar system, 40 billion miles away. Pictures containing enough information to detect Earth as a blue speck using less than a full pixel's worth of information.
 \clearpage
 \printbibliography
 %----------------------------------------------------------------------------------------
